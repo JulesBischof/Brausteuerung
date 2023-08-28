@@ -3,7 +3,7 @@ const express = require("express");
 let router = express.Router();
 
 //functions that handles incoming orders
-const {handleorder, startAutoControl} = require('../brewcontrol/01-handleorder.js');
+// const {handleorder, startAutoControl} = require('../brewcontrol/01-handleorder.js');
 
 let order = {};
 
@@ -13,7 +13,7 @@ router
     .route('/')
     .post((req, res) => {
         let order = req.body;
-        handleorder(order);
+        // handleorder(order);
         res.send(JSON.stringify(order));
     });
 
