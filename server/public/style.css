@@ -1,0 +1,29 @@
+.flextocenter{
+    display: flex;
+    justify-content: center;
+}
+.inputsize{
+    margin: auto;
+    width: 100px;
+}
+
+.centerstuff {
+
+    text-align: center;
+
+
+}
+
+.controlfield {
+    border: 2px solid #acacac;
+    margin: 2%;
+    border-radius: 10px;
+    background-color: white;
+}
+
+.chart {
+    height: 220px;
+}
+fieldset {
+    border: none;
+}

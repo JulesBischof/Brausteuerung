@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="de">
+   <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1" />
+      <title>Julians Brausteuerung 2.0</title>
+      <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+      <link rel="stylesheet" href="style.css">
+   </head>
+   <body class=" w3-grey ">
+      <section id="currentstatepanel" class="w3-light-grey w3-round-large centerstuff w3-row w3-margin w3-card ">
+         <div class="panelheader w3-white w3-border w3-round-large w3-margin">
+            <h1>Status Panel</h1>
+         </div>
+         <article class="w3-quarter">
+            <div class="">
+               <p>Temperatur</p>
+               <div class="controlfield">
+                  <p>30°C</p>
+               </div>
+               <p>Gradient</p>
+               <div class="controlfield">
+                  <p>+3°C/min</p>
+               </div>
+            </div>
+            <p>Timer</p>
+            <div class="controlfield">
+               <p>35min</p>
+            </div>
+            <p>aktuelle Rast</p>
+            <div class="controlfield">
+               <p>Maltose</p>
+            </div>
+         </article>
+         <article class="w3-half">
+            <p>Chart</p>
+            <div class="chart controlfield">
+               <p>Chartzeug</p>
+            </div>
+            <p>messages</p>
+            <div class="controlfield">
+               <p>submit succes!</p>
+            </div>
+         </article>
+         <article class="w3-quarter">
+            <p>Stirrspeed</p>
+            <div class="controlfield">
+               <p>2/2</p>
+            </div>
+            <p>Boiler Status</p>
+            <div class="controlfield">
+               <p>Heat</p>
+            </div>
+            <p>Programmmode</p>
+            <div class="controlfield">
+               <p>Brewing</p>
+            </div>
+            <p>Raspitemp</p>
+            <div class="controlfield">
+               <p>40°C</p>
+            </div>
+         </article>
+      </section>
+
+      <section id="controlpanel" class="w3-light-grey w3-round-large w3-row w3-margin w3-card centerstuff">
+         <div class="panelheader w3-white w3-border w3-round-large w3-margin">
+            <h1>Control Panel</h1>
+         </div>
+         <article class="w3-padding w3-margin w3-row w3-border">
+
+
+                  <button name = "controlpanel" class="w3-green w3-button w3-border w3-round-large w3-col l2 m2 w3-margin" id="Boileron" type="submit">Boiler on</button>
+                  <button name = "controlpanel" class="w3-red w3-button w3-border w3-round-large w3-col l2 m2 w3-margin" id="Boileroff" type="submit">Boiler off</button>
+                  <button name = "controlpanel" class="w3-yellow w3-button w3-border w3-round-large w3-col l2 m2 w3-margin" id="faststirr" type="submit">stirr fast</button>
+                  <button name = "controlpanel" class="w3-orange w3-button w3-border w3-round-large w3-col l2 m2 w3-margin" id="slowstirr" type="submit">stirr slow</button>
+                  <button name = "controlpanel" class="w3-red w3-button w3-border w3-round-large w3-col l2 m2 w3-margin" id="stoppstirr" type="submit">stirr stop</button>
+                  <button name = "controlpanel" class="w3-green w3-button w3-border w3-round-large w3-col l2 m2 w3-margin" id="startauto" type="submit">Start auto</button>
+                  <button name = "controlpanel" class="w3-red w3-button w3-border w3-round-large w3-col l2 m2 w3-margin" id="stoppauto" type="submit">Stop auto</button> 
+
+                  <ul class="w3-col l3 m3 s3">
+                     <li>
+                        <label for="brewmode">brew mode</label>
+                        <input class="w3-radio" name="selmode" id="brewmode" type="radio" checked="checked">
+
+                        <label for="boilmode">boil mode</label>
+                        <input class="w3-radio" name="selmode" id="boilmode" type="radio">
+                     </li>
+                  </ul>
+
+         </article>
+      </section>
+
+      <section id="recipepanel" class="w3-light-grey w3-round-large w3-row w3-margin w3-card centerstuff">
+         <div class="panelheader w3-white w3-border w3-round-large w3-margin">
+            <h1>Recipe Panel</h1>
+         </div>
+         <article class="w3-white w3-round-large w3-row w3-margin w3-card centerstuff">
+            <form id="dropdownform"></form>
+            <h4>Choose recipe to change its data</h4>
+            <p>To create a new recipe, simply type in its data (as well as boil and restdata) and press the "create master" - Button! </p>
+            <p>If you want to change an existing recipe, simply select it out of the dropdown, change its data and press the update Button!</p>
+            <p>The moment you change a recipes name, a new entry is going to be made.</p>
+            <p>To load a recipe into the working area, press "use in auto"</p>
+            <p>!!! darstellung auf Statuspanel welches Rezept gerade geladen ist! Ausserdem evt. report funktion um Rezept auszudrucken? </p>
+            <div class="w3-row flextocenter w3-padding">
+               <div id="selection" class="w3-col l2 s2 w3-margin">
+                  <select id="select" class="w3-input" v-model="selectedMasterdata" @click="updatetable(selectedMasterdata)">
+                  <option v-for="entry in masterdata" :key="entry.id" :value="entry.id">{{ entry.name }}</option>
+                  </select>
+               </div>
+               <button id="deletemaster" class="w3-button w3-col l1 s1 w3-margin w3-border w3-round-large" @click = "handleButton(selectedMasterdata, {master, rests, hops, malts}, 'DELETE')">delete</button>  <!-- alter click listener: @click="deleteFromMaster(selectedMasterdata)" -->
+               <button id="usemaster" class="w3-button w3-col l1 s1 w3-margin w3-border w3-round-large">use in auto</button>
+            </div>
+             
+            </form>
+         </article>
+
+         <!--=================================================================================================================================================masterdata panel-->
+         <article class="w3-white w3-round-large w3-row w3-margin w3-card centerstuff w3-responsive">
+            <h4>Masterdata</h4>
+            <div class="w3-responsive w3-margin">
+               <form id="masterpanelform" class="w3-margin">
+                  <table class="w3-table-all w3-centered w3-margin-top" style="width: 100%;">
+                     <thead>
+                        <tr>
+                           <th>Beer name</th>
+                           <th>last brewed</th>
+                           <th>style</th>
+                           <th>Stw [°P]</th>
+                           <th>ABV [%]</th>
+                        </tr>
+                     </thead>
+                     <tbody>
+                        <tr class=" w3-light-grey">
+                           <td><input type="text" id="name" class="w3-input w3-border" v-model="master.name"></td>
+                           <td><input type="text" id="lastbrewed" class="w3-input w3-border" v-model="master.lastbrewed"></td>
+                           <td><input type="text" id="beerstyle" class="w3-input w3-border" v-model="master.style"></td>
+                           <td><input type="number" id="Stw" class="w3-input w3-border" v-model="master.Stw"></td>
+                           <td><input type="number" id="ABV" class="w3-input w3-border" v-model="master.ABV"></td>
+                        </tr>
+                     </tbody>
+                  </table>
+                  <table class="w3-table-all w3-centered w3-margin-top" style="width: 100%;">
+                     <thead>
+                        <tr>
+                           <th>sparge Vol. [ltr]</th>
+                           <th>boil time [min]</th>
+                           <th>Yeast</th>
+                           <th>grist [kg]</th>
+                           <th>mash Vol. [ltr]</th>
+                        </tr>
+                     </thead>
+                     <tbody>
+                        <tr class=" w3-light-grey">
+                           <td><input type="number" id="spargevol" class="w3-input w3-border" v-model="master.spargevol"></td>
+                           <td><input type="number" id="general_boilduration" class="w3-input w3-border" v-model="master.totboiltime"></td>
+                           <td><input type="text" id="Yeast" class="w3-input w3-border" v-model="master.yeast"></td>
+                           <td><input type="number" id="kgmalt" class="w3-input w3-border" v-model="master.grist"></td>
+                           <td><input type="number" id="mashvol" class="w3-input w3-border" v-model="master.mashvol"></td>
+                        </tr>
+                     </tbody>
+                  </table>
+               </form>
+            </div>
+         </article>
+
+         <!--=================================================================================================================================================restdata panel-->
+         <article class="w3-white w3-round-large w3-row w3-margin w3-card centerstuff">
+            <h4>Restdata</h4>
+            <div class="w3-threequarter">
+              <form id="restpanelform" class="w3-margin">
+                <table class="w3-table-all w3-centered w3-margin">
+                  <thead>
+                    <tr>
+                      <th>Rest-name</th>
+                      <th>Temperature [°C]</th>
+                      <th>rest for...[min]</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="(rest, index) in rests" :key="index">
+                      <td><input :name="'restname_' + index" :id="'restname_' + index" type="text" :key="'restname_' + index" v-model="rest.name"></td>
+                      <td><input :name="'resttemp_' + index" :id="'resttemp_' + index" type="number" :key="'resttemp_' + index" v-model="rest.temperature"></td>
+                      <td><input :name="'resttime_' + index" :id="'resttime_' + index" type="number" :key="'resttime_' + index" v-model="rest.duration"></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </form>
+            </div>
+            <div class="w3-rest">
+              <div class="w3-margin">
+                <label for="numberofrests">Number of Rests</label>
+                <input type="number" name="numberofrests" id="numberofrests" class="w3-input w3-border inputsize" v-model="numberofrests">
+              </div>
+            </div>
+          </article>
+
+          <!--=================================================================================================================================================boildata panel-->
+         <article class="w3-white w3-round-large w3-row w3-margin w3-card centerstuff w3-responsive">
+            <h4>Boildata</h4>
+            <div class="w3-threequarter w3-margin">
+               <form id="boilpanelform" class="w3-margin">
+                  <table class="w3-table-all w3-centered">
+                      <tr>
+                          <th>Hops-name</th>
+                          <th>Alpha acid [%]</th>
+                          <th>boil for...[min]</th>
+                          <th>weight [g]</th>
+                      </tr>
+                      <tr v-for="(hop, index) in hops" :key="index">
+                        <td><input :name="'hopsname_' + index" :id="'hopsname_' + index" type="text" v-model="hop.name"></td>
+                        <td><input :name="'alphaacid_' + index" :id="'alphaacid_' + index" type="number" @input="hop.alphaacid = parseInt($event.target.value)" v-model="hop.alphaacid"></td>
+                        <td><input :name="'droptime_' + index" :id="'droptime_' + index" type="number" @input="hop.droptime = parseInt($event.target.value)" v-model="hop.droptime"></td>
+                        <td><input :name="'hopsweight_' + index" :id="'hopsweight_' + index" type="number" @input="hop.weight = parseInt($event.target.value)" v-model="hop.weight"></td>
+                      </tr>
+                  </table>
+              </form>
+              
+            </div>
+            <div class="w3-rest">
+               <div class="w3-margin">
+                  <label for="numberofhops">Number of Hops</label>
+                  <input type="number" name="numberofhops" id="numberofhops" class="w3-input w3-border inputsize" v-model="numberofhops">
+               </div>
+            </div>
+         </article>
+
+
+         <!--=================================================================================================================================================malt Data panel-->
+         <article class="w3-white w3-round-large w3-row w3-margin w3-card centerstuff w3-responsive">
+         <h4>Raw Material Grist</h4>
+         <div class="w3-threequarter w3-margin">
+            <form id="gristpanelform" class="w3-margin">
+               <table class="w3-table-all w3-centered">
+                     <tr>
+                        <th>Malt-name</th>
+                        <th>EBC</th>
+                        <th>weight [g]</th>
+                     </tr>
+                     <tr v-for="(malt, index) in malts" :key="index">
+                        <td><input :name="'maltname_' + index" :id="'maltname_' + index" type="text" v-model="malt.name"></td>
+                        <td><input :name="'EBC_' + index" :id="'EBC_' + index" type="number" v-model="malt.ebc"></td>
+                        <td><input :name="'maltweight_' + index" :id="'maltweight_' + index" type="number" v-model="malt.weight"></td>
+                     </tr>
+               </table>
+            </form>
+            
+         </div>
+         <div class="w3-rest">
+            <div class="w3-margin">
+               <label for="numberofmalts">Number of Malts</label>
+               <input type="number" name="numberofmalts" id="numberofmalts" class="w3-input w3-border inputsize" v-model="numberofmalts">
+            </div>
+         </div>
+      </article>
+
+
+      <!--=================================================================================================================================================Submit panel-->
+      <article class="centerstuff w3-responsive flextocenter">
+         <div class="w3-third w3-border w3-padding w3-white w3-round-large w3-row w3-margin w3-card">
+            <div class="w3-row">
+               <div class = "w3-margin">
+               <button type="button" id="masterdatasubmit" class="w3-button w3-border w3-round-large w3-margin-top" @click="handleButton('masterdata', { master, rests, hops, malts }, 'POST')" :disabled="disable_mastersubmit">create master</button>
+               <button type="button" id="updatemaster" class="w3-button w3-border w3-round-large w3-margin-top" @click="handleButton( selectedMasterdata, { master, rests, hops, malts, selectedMasterdata }, 'PUT')" :disabled="disable_masterupdate">update master</button>
+               </div>
+            </div>
+         </div>
+      </article>
+   </section>
+
+
+
+
+
+
+
+
+
+
+
+      <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script> <!--include Vue.js-->
+      <script src="01-statuspanel.js"></script> 
+      <script src="02-controlpanel.js"></script> 
+      <script src="03-recipepanel.js"></script> 
+      
+   </body>
+</html>
