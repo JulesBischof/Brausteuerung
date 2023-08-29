@@ -29,9 +29,8 @@
       <v-btn
         @click="
           handleButton(
-            'recipepanelAPI/',
+            `recipepanelAPI/${selectedRecipeId}`,
             {
-              selectedMasterdata,
               master,
               rests,
               hops,

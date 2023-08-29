@@ -88,7 +88,7 @@ router
   .put(async (req, res) => {
     try {
       // divide json package into pieces
-      const selectedMasterdata = req.body.selectedMasterdata;
+      const selectedMasterdata = req.params.selected_id;
       const masterdata = req.body.master;
       const restdata = Object.values(req.body.rests);
       const boildata = Object.values(req.body.hops);
@@ -111,7 +111,7 @@ router
       await recipe_db.updateOrInsertRows(
         "recipe_master",
         selectedMasterdata,
-        [masterdata],
+        masterdata,
         "id",
         "id",
         "all"
