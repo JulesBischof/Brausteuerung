@@ -142,7 +142,7 @@ router
 
 //==========================================================================================================================handle incoming requests with MASTERDATA
 router
-  .route("/masterdata")
+  .route("/")
   //create new masterdata!
   .post(async (req, res) => {
     try {

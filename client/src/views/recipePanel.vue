@@ -8,7 +8,7 @@
         label="select Master"
         :items="dropdownItems"
       ></v-combobox>
-      <v-btn>create Master</v-btn>
+      <v-btn @click="handleButton('recipepanelAPI/', { master, rests, hops, malts }, 'post')">create Master</v-btn>
       <v-btn>update Master</v-btn>
       <v-btn>delete Master</v-btn>
     </v-toolbar>
@@ -89,6 +89,8 @@ import InputTable from "@/components/InputTable.vue";
 import MasterInputs from "@/components/MasterInputs.vue";
 import axios from "axios";
 
+const serverUrl = "http://localhost:5000";
+
 export default {
   name: "recipePanel",
   components: {
@@ -121,7 +123,7 @@ export default {
         console.log(data);
         const response = await axios({
           method: method,
-          url: `/recipe/${url_ending}`,
+          url: `${serverUrl}/${url_ending}`,
           data: data,
           headers: {
             "Content-Type": "application/json",
@@ -130,7 +132,7 @@ export default {
         console.log("Response erhalten:", response.data);
         console.log("method = ", method);
         // update select Dropdown!
-        this.fetchmasterdata();
+        // this.fetchmasterdata();
 
         if (method === "DELETE") {
           //set back entries to default, when delete button got hit

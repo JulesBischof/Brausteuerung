@@ -1,5 +1,3 @@
-const { temperature } = require('ds18b20');
-
 const sqlite3 = require('sqlite3').verbose();
 
 const recipe_db = {
