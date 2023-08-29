@@ -49,9 +49,8 @@ router
                                                FROM recipe_master 
                                                WHERE id = ?`,
         selected_id,
-        "get"
+        "all"
       );
-
       //############################################################################################################## GET entries in recipe_rests table
       res_array[1] = await recipe_db.sqlQuery(
         `SELECT * 
@@ -140,23 +139,20 @@ router
     }
   });
 
-//==========================================================================================================================handle incoming requests with MASTERDATA
+//==========================================================================================================================handle incoming requests without an selected ID
 router
   .route("/")
   //create new masterdata!
   .post(async (req, res) => {
     try {
-      // divide json package into pieces
-      const masterdata = Object.values(req.body.master);
+      console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> here is a new psot")
+      // divide json package into pieces (turn Objects into Arrays)
+      const masterdata = Object.values(req.body.master[0]);
       const restdata = Object.values(req.body.rests);
       const boildata = Object.values(req.body.hops);
       const gristdata = Object.values(req.body.malts);
-
       console.log(
         "_____________________________________________recieved data START: "
-      );
-      console.log(
-        "_____________________________________________SQLite method: INSERT"
       );
       console.log("masterdata: ", masterdata);
       console.log("restdata: ", restdata);
@@ -166,6 +162,9 @@ router
         "_____________________________________________recieved data END"
       );
 
+      console.log(
+        "____________________________________________START insert data into databases"
+      );
       // create entry in masterdata table
       await recipe_db.insertData("recipe_master", masterdata);
 
@@ -177,9 +176,6 @@ router
       );
       const newMasterId = SQL4id_res_Array[0].id; //first entry contains id
       console.log("New Master_ID:", newMasterId);
-      console.log(
-        "____________________________________________START insert data into database"
-      );
 
       // create entries in restdata_db
       for (let index = 0; index < restdata.length; index++) {
@@ -244,12 +240,10 @@ router
       })
       .catch((err) => {
         console.log(err);
-        res
-          .status(500)
-          .json({
-            destination: "dropdown",
-            msg: "Internal server error while getting data",
-          });
+        res.status(500).json({
+          destination: "dropdown",
+          msg: "Internal server error while getting data",
+        });
       });
   });
 

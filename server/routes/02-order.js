@@ -7,16 +7,11 @@ let router = express.Router();
 
 let order = {};
 
-
 //handle orders
-router
-    .route('/')
-    .post((req, res) => {
-        let order = req.body;
-        // handleorder(order);
-        res.send(JSON.stringify(order));
-    });
-
-
+router.route("/").post((req, res) => {
+  let order = req.body;
+  // handleorder(order);
+  res.send(JSON.stringify(order));
+});
 
 module.exports = router;
