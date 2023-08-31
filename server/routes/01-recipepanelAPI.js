@@ -3,7 +3,10 @@ const express = require("express");
 let router = express.Router();
 
 //import object to handle Database
-const { recipe_db } = require("../database/01-db-object.js");
+const { recipe_db } = require("../src/database/01-db-object.js");
+//import Validation class
+const { CheckRecipeArrayClass } = require("../src/00-Validation.js");
+
 
 //==========================================================================================================================handle general-purpose incoming requests for specific id's
 router
@@ -145,22 +148,30 @@ router
   //create new masterdata!
   .post(async (req, res) => {
     try {
-      console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> here is a new psot")
       // divide json package into pieces (turn Objects into Arrays)
       const masterdata = Object.values(req.body.master[0]);
       const restdata = Object.values(req.body.rests);
       const boildata = Object.values(req.body.hops);
       const gristdata = Object.values(req.body.malts);
       console.log(
-        "_____________________________________________recieved data START: "
+        ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> recieved data START: "
       );
       console.log("masterdata: ", masterdata);
       console.log("restdata: ", restdata);
       console.log("boildata: ", boildata);
       console.log("gristdata: ", gristdata);
       console.log(
-        "_____________________________________________recieved data END"
+        "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< recieved data END"
       );
+
+      const masterValidation = new CheckRecipeArrayClass(req.body.master, recipe_db.master_columns, recipe_db.limits.masterdata);
+      masterValidation.IsValid()
+      .then(() => {
+        console.log("++++++++++++++++++++++++++++++++++++++++++++++++++++++++ MASTER IST GÜLTIG!!")
+      })
+      .catch((error) => {
+        console.error("++++++++++++++++++++++++++++++++++++++++++++++++++++++ MASTER IST NICHT GÜLTIG", error.message)
+      })
 
       console.log(
         "____________________________________________START insert data into databases"

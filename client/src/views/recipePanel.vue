@@ -169,6 +169,7 @@ export default {
           // 0 due to master is an array -> we need the first object. Array makes it easier for server
           delete data.master.id;
         }
+        console.log(data);
         const response = await axios({
           method: method,
           url: `${serverUrl}/${url_ending}`,

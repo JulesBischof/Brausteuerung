@@ -31,6 +31,29 @@ const recipe_db = {
   ],
   grist_columns: ["recipe_master_id", "name", "ebc", "weight"],
 
+  limits: {
+    masterdata: {
+        stw: 80,
+        abv: 30,
+        totboiltime: 90,
+        mashvol: 30,
+        spargevol: 30
+    },
+    restdata: {
+      temperature: 80,
+      duration: 120
+    },
+    boildata: {
+      alphaacid: 30,
+      droptime: 90,
+      weight: 100
+    },
+    gristdata: {
+      ebc: 10000,
+      weight: 10000
+    },
+  },
+
   //=====================================================================================================methods
 
   //connect & disconnect
