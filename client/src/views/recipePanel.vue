@@ -48,6 +48,11 @@
         "
         >delete Master</v-btn
       >
+
+            <!-- button show Snackbar master -->
+            <v-btn
+        @click="showSnackbar( 'Maggi123' )">update Master</v-btn>
+      >
     </v-toolbar>
     <v-row>
       <v-col cols="12" sm="2">
@@ -60,6 +65,7 @@
       </v-col>
       <v-col cols="12" sm="10">
         <v-window v-model="tab">
+
           <!-- MASTER PANEL -->
           <v-window-item value="Master">
             <MasterInputs
@@ -119,6 +125,11 @@
         </v-window>
       </v-col>
     </v-row>
+    <Snackbar
+      :message="SnackbarMessage"
+      color="error"
+      :timeout="5000"
+    ></Snackbar>
   </v-card>
 </template>
 
@@ -126,6 +137,7 @@
 <script>
 import InputTable from "@/components/InputTable.vue";
 import MasterInputs from "@/components/MasterInputs.vue";
+import Snackbar from "@/components/ShowSnackbar.vue";
 import axios from "axios";
 
 const serverUrl = "http://localhost:5000";
@@ -135,6 +147,7 @@ export default {
   components: {
     InputTable,
     MasterInputs,
+    Snackbar,
   },
   data() {
     return {
@@ -155,6 +168,7 @@ export default {
       malts: [{}],
 
       // _________________________________________________________________________________________ Layout binding Variables
+      SnackbarMessage: "",
     };
   },
 
@@ -198,7 +212,7 @@ export default {
         const response = await axios.get(
           `${serverUrl}/recipepanelAPI/${this.selectedRecipeId}`
         );
-        console.log("Response updateForms: ", response);
+        console.log("Response updateForms: ", response.data);
         //fill Form-data objects
         this.master = response.data[0];
         delete this.master[0].id; //there is no need for master id -> gets fetched by dropdown menu
@@ -229,6 +243,10 @@ export default {
         (this.rests = [{}]),
         (this.hops = [{}]),
         (this.malts = [{}]);
+    },
+    showSnackbar(msg) {
+      this.SnackbarMessage = msg;
+      this.$refs.snackbarComponent.snackbar = true;
     },
   },
 

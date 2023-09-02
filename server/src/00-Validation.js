@@ -4,15 +4,23 @@ const { recipe_db } = require("./database/01-db-object.js");
   class CheckRecipeArrayClass {
     constructor(incomingDataArray, dbColumns, limits) {
       this.incomingDataArray = incomingDataArray;
-      this.dbColumns = dbColumns;
       this.limits = limits;
+
+      //Validation does not neet dbColumns "recipe_master_id", "hopnumber", "restsnumber"
+      this._APIelementsToRemove = ["id", "recipe_master_id", "restnumber", "hopnumber"];
+      const cleanedColumnArray = dbColumns.filter((item) => !this._APIelementsToRemove.includes(item));
+      this.dbColumns = cleanedColumnArray;
+
     }
-  
+
     _CheckAPI() {
         const firstObject = this.incomingDataArray[0];
         const objectKeys = Object.keys(firstObject);
-        // Check, if objectKeys matches with dbColumns
-        return JSON.stringify(objectKeys) === JSON.stringify(this.dbColumns);
+
+        // remove this.dbColumns, if there is a need for it
+        const cleanedKeysArray = objectKeys.filter((item) => !this._APIelementsToRemove.includes(item));
+
+        return JSON.stringify(cleanedKeysArray) === JSON.stringify(this.dbColumns);
       }
   
     _RowsGeneral(data) {
@@ -46,15 +54,15 @@ const { recipe_db } = require("./database/01-db-object.js");
     IsValid() {
       return new Promise((resolve, reject) => {
         if (!this._CheckAPI()) {
-          reject(new Error('API bad request'));
+          reject(new Error('ERROR: Validation_API bad request. API columns: ', this.dbColumns));
         }
   
         for (const value of this.incomingDataArray) {
           if (!this._RowsGeneral(value)) {
-            reject(new Error(`ERROR: Corrupt input in ${JSON.stringify(value)}`));
+            reject(new Error(`ERROR: Validation_Corrupt input in ${JSON.stringify(value)}`));
           }
           if (!this._RowsCheckLimits(value)) {
-            reject(new Error(`ERROR: Check limitations in ${JSON.stringify(value)}`));
+            reject(new Error(`ERROR: Validation_Check limitations in ${JSON.stringify(value)}`));
           }
         }
         resolve();
