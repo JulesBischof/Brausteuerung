@@ -19,7 +19,8 @@
           handleButton(
             'recipepanelAPI/',
             { master, rests, hops, malts },
-            'post'
+            'post',
+            `new Recipe created!`
           )
         "
         >create Master</v-btn
@@ -36,7 +37,8 @@
               hops,
               malts,
             },
-            'put'
+            'put',
+            `Recipe id ${this.selectedRecipeId} got updated!`
           )
         "
         >update Master</v-btn
@@ -44,14 +46,14 @@
       <!-- button delete master  -->
       <v-btn
         @click="
-          handleButton(`recipepanelAPI/${selectedRecipeId}`, {}, 'delete')
+          handleButton(
+            `recipepanelAPI/${selectedRecipeId}`,
+            {},
+            'delete',
+            `Recipe id ${this.selectedRecipeId} got deleted!`
+          )
         "
         >delete Master</v-btn
-      >
-
-            <!-- button show Snackbar master -->
-            <v-btn
-        @click="showSnackbar( 'Maggi123' )">update Master</v-btn>
       >
     </v-toolbar>
     <v-row>
@@ -65,7 +67,6 @@
       </v-col>
       <v-col cols="12" sm="10">
         <v-window v-model="tab">
-
           <!-- MASTER PANEL -->
           <v-window-item value="Master">
             <MasterInputs
@@ -126,8 +127,9 @@
       </v-col>
     </v-row>
     <Snackbar
+      ref="snackbarComponent"
       :message="SnackbarMessage"
-      color="error"
+      :color="SnackbarColor"
       :timeout="5000"
     ></Snackbar>
   </v-card>
@@ -169,13 +171,25 @@ export default {
 
       // _________________________________________________________________________________________ Layout binding Variables
       SnackbarMessage: "",
+      SnackbarColor: "",
     };
   },
 
   // _________________________________________________________________________________________ methods
   methods: {
+    snackbarmessage(ServerResponse, OKmessage) {
+      if (ServerResponse.status !== 200) {
+        this.showSnackbar(
+          `Server ERROR: ${ServerResponse.data.message}`,
+          "error"
+        );
+      } else {
+        this.showSnackbar(OKmessage, "success");
+      }
+    },
+
     //handle toolbar buttons such as create, update and delete
-    async handleButton(url_ending, data, method) {
+    async handleButton(url_ending, data, method, successMessage = "empty") {
       try {
         //submit does not need the id of data
 
@@ -193,6 +207,8 @@ export default {
           },
         });
         console.log("Response handleButton: ", response.data);
+        //succes?? -> show message in snackbar
+        this.snackbarmessage(response, successMessage);
 
         // update select Dropdown!
         this.fetchSelectEntries();
@@ -202,7 +218,8 @@ export default {
           this.emptyForms();
         }
       } catch (error) {
-        console.log("Error handleButton: ", error);
+        console.log("Error handleButton: ", error.response.data.message);
+        this.snackbarmessage(error.response, "Server detected ERROR: ");
       }
     },
 
@@ -244,9 +261,11 @@ export default {
         (this.hops = [{}]),
         (this.malts = [{}]);
     },
-    showSnackbar(msg) {
+
+    showSnackbar(msg, color) {
       this.SnackbarMessage = msg;
       this.$refs.snackbarComponent.snackbar = true;
+      this.SnackbarColor = color;
     },
   },
 

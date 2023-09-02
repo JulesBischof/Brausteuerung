@@ -54,15 +54,15 @@ const { recipe_db } = require("./database/01-db-object.js");
     IsValid() {
       return new Promise((resolve, reject) => {
         if (!this._CheckAPI()) {
-          reject(new Error('ERROR: Validation_API bad request. API columns: ', this.dbColumns));
+          reject(new Error('Validation_API bad request. Check Formdata for Null-Values', this.dbColumns));
         }
   
         for (const value of this.incomingDataArray) {
           if (!this._RowsGeneral(value)) {
-            reject(new Error(`ERROR: Validation_Corrupt input in ${JSON.stringify(value)}`));
+            reject(new Error(`Validation_Corrupt input in Formdata!`));
           }
           if (!this._RowsCheckLimits(value)) {
-            reject(new Error(`ERROR: Validation_Check limitations in ${JSON.stringify(value)}`));
+            reject(new Error(`Validation_Check limitations in Formdata! Some Values are either too high, or too low. Check Server for more Information`));
           }
         }
         resolve();

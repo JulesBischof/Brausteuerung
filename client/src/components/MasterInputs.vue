@@ -5,7 +5,7 @@
         <h1>Masterdata</h1>
       </v-container>
       <v-card-text>
-        <template v-for="(item, index) in inputItems" :key="index">
+        <div v-for="(item, index) in inputItems" :key="index">
           <v-row>
             <v-col
               cols="12"
@@ -20,7 +20,7 @@
               ></v-text-field>
             </v-col>
           </v-row>
-        </template>
+        </div>
       </v-card-text>
     </v-card>
   </div>

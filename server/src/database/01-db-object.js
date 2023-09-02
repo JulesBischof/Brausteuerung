@@ -172,24 +172,6 @@ class dbHandlerClass {
     }
   }
 
-  // async insertRowData() {
-  //   try {
-  //     // Create placeholders for the values
-  //     const placeholders = _newDataArray.map(() => "?").join(", ");
-  //     // Create the INSERT query
-  //     const query = `INSERT INTO ${this._tableName} (${this._columns.join(
-  //       ", "
-  //     )}) VALUES (${placeholders})`;
-  //     // Execute the SQL query
-  //     await this._sqlQuery(query, _newDataArray, "run");
-  //     console.log(`Insert into table ${this._tableName} successful.`);
-  //   } catch (error) {
-  //     console.error(
-  //       `Error during insert into table ${this._tableName}: ${error}`
-  //     );
-  //   }
-  // }
-
   async fetchMaxId() {
     return new Promise((resolve, reject) => {
       this._sqlQuery(`SELECT MAX(id) AS id FROM ${this._tableName}`, [], "all")

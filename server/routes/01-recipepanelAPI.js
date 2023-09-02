@@ -227,13 +227,12 @@ router
         gristdbHandler.updateOrInsertRows(),
       ]).catch((err) => {
         throw err;
-        return;
       });
 
       res.status(200).send({ msg: "Update successful" });
     } catch (err) {
       console.log("Something went wrong in the PUT route: ", err);
-      res.status(500).send(err);
+      res.status(500).json({message: `PUT request failed: ${err}`});
     }
   });
 
@@ -243,13 +242,14 @@ router
   //create new masterdata!
   .post(async (req, res) => {
     console.log("put request new recipe");
+    let responseSent = false; // Flag, um festzustellen, ob bereits eine Antwort gesendet wurde
 
     try {
       const masterdata = Object.values(req.body.master);
       const restdata = Object.values(req.body.rests);
       const boildata = Object.values(req.body.hops);
       const gristdata = Object.values(req.body.malts);
-
+  
       console.log(
         ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> received data START: "
       );
@@ -260,116 +260,123 @@ router
       console.log(
         "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< received data END"
       );
-
+  
       // Validation
       console.log(
         ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Validation START: "
       );
-
+  
       const validationPromises = [
         new CheckRecipeArrayClass(
           masterdata,
           recipe_db.master_columns,
           recipe_db.limits.masterdata
         ).IsValid(),
-
+  
         new CheckRecipeArrayClass(
           restdata,
           recipe_db.rests_columns,
           recipe_db.limits.restdata
         ).IsValid(),
-
+  
         new CheckRecipeArrayClass(
           boildata,
           recipe_db.hops_columns,
           recipe_db.limits.boildata
         ).IsValid(),
-
+  
         new CheckRecipeArrayClass(
           gristdata,
           recipe_db.grist_columns,
           recipe_db.limits.gristdata
         ).IsValid(),
       ];
-
+  
       await Promise.all(
         validationPromises.map((promise) =>
           promise.catch((err) => {
-            res.status(500).json({ msg: "Validation failed", error: err });
-            throw err; // To prevent subsequent steps
+            if (!responseSent) {
+              res.status(500).json({ message: `Validation failed: ${err}` });
+              responseSent = true; // Markiere, dass eine Antwort gesendet wurde
+            }
+            throw err; // Um die nachfolgenden Schritte zu verhindern
           })
         )
       );
-
-      console.log("Validation OK");
-
-      // Insert data into the database
-
-      const masterdbHandler = new dbHandlerClass(
-        masterdata,
-        "recipe_master",
-        "id",
-        recipe_db.master_columns,
-        null
-      );
-
-      await masterdbHandler.insertDataArray().catch((err) => {
-        res.status(500).json({ msg: "master insert failed", error: err });
-        throw err; // To prevent subsequent steps
-      });
-
-      const newMasterId = await masterdbHandler.fetchMaxId().catch((err) => {
-        console.log(err);
-        throw err; // To prevent subsequent steps
-      });
-
-      const restdbHandler = new dbHandlerClass(
-        boildata,
-        "recipe_hops",
-        "recipe_master_id",
-        recipe_db.hops_columns,
-        newMasterId
-      );
-      const boildbHandler = new dbHandlerClass(
-        restdata,
-        "recipe_rests",
-        "recipe_master_id",
-        recipe_db.rests_columns,
-        newMasterId
-      );
-      const gristdbHandler = new dbHandlerClass(
-        gristdata,
-        "recipe_grist",
-        "recipe_master_id",
-        recipe_db.grist_columns,
-        newMasterId
-      );
-
-      // Create entries in the database
-      await Promise.all([
-        restdbHandler.insertDataArray().catch((err) => {
-          res.status(500).json({ msg: "restData insert failed", error: err });
-          throw err; // To prevent subsequent steps
-        }),
-
-        boildbHandler.insertDataArray().catch((err) => {
-          res.status(500).json({ msg: "boildata insert failed", error: err });
-          throw err; // To prevent subsequent steps
-        }),
-
-        gristdbHandler.insertDataArray().catch((err) => {
-          res.status(500).json({ msg: "gristdata insert failed", error: err });
-          throw err; // To prevent subsequent steps
-        }),
-      ]);
-
-      // Everything went well -> send a response to the client
-      res.json({
-        msg: "new data insertion successful!",
-      });
+  
+      if (!responseSent) {
+        console.log("Validation OK");
+  
+        // Insert data into the database
+  
+        const masterdbHandler = new dbHandlerClass(
+          masterdata,
+          "recipe_master",
+          "id",
+          recipe_db.master_columns,
+          null
+        );
+  
+        await masterdbHandler.insertDataArray().catch((err) => {
+          res.status(500).json({message: `Masterinsert failed: ${err}`});
+          throw err; // Um die nachfolgenden Schritte zu verhindern
+        });
+  
+        const newMasterId = await masterdbHandler.fetchMaxId().catch((err) => {
+          console.log(err);
+          throw err; // Um die nachfolgenden Schritte zu verhindern
+        });
+  
+        const restdbHandler = new dbHandlerClass(
+          boildata,
+          "recipe_hops",
+          "recipe_master_id",
+          recipe_db.hops_columns,
+          newMasterId
+        );
+        const boildbHandler = new dbHandlerClass(
+          restdata,
+          "recipe_rests",
+          "recipe_master_id",
+          recipe_db.rests_columns,
+          newMasterId
+        );
+        const gristdbHandler = new dbHandlerClass(
+          gristdata,
+          "recipe_grist",
+          "recipe_master_id",
+          recipe_db.grist_columns,
+          newMasterId
+        );
+  
+        // Create entries in the database
+        await Promise.all([
+          restdbHandler.insertDataArray().catch((err) => {
+            res.status(500).json({message: `Restdata insert failed: ${err}`});
+            throw err; // Um die nachfolgenden Schritte zu verhindern
+          }),
+  
+          boildbHandler.insertDataArray().catch((err) => {
+            res.status(500).json({message: `Boildata insert failed: ${err}`});
+            throw err; // Um die nachfolgenden Schritte zu verhindern
+          }),
+  
+          gristdbHandler.insertDataArray().catch((err) => {
+            res.status(500).json({message: `Gristdata insert failed: ${err}`});
+            throw err; // Um die nachfolgenden Schritte zu verhindern
+          }),
+        ]);
+  
+        // Everything went well -> send a response to the client
+        res.json({
+          message: `Insert Successfull! `,
+        });
+      }
     } catch (err) {
       console.error("Error:", err);
-      res.status(500).send(err);
+      if (!responseSent) {
+        res.status(500).json({message: `Post request failed: ${err}`});
+      }
     }
   })
 
