@@ -92,6 +92,7 @@
                 { name: 'duration', label: 'Rest for... [min]' },
               ]"
               title="Rests"
+              dataName = "restdata"
               v-model="rests"
             />
           </v-window-item>
@@ -106,6 +107,7 @@
                 { name: 'weight', label: 'Weight [g]' },
               ]"
               title="Hops"
+              dataName = "boildata"
               v-model="hops"
             />
           </v-window-item>
@@ -118,6 +120,7 @@
                 { name: 'ebc', label: 'EBC' },
                 { name: 'weight', label: 'Weight [g]' },
               ]"
+              dataName = "gristdata"
               title="Grist"
               v-model="malts"
             />

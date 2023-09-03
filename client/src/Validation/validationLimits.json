@@ -1,7 +1,7 @@
 {
   "masterdata": {
     "name": {
-      "maxLength": 50
+      "maxLength": 10
     },
     "style": {
       "maxLength": 15
@@ -15,7 +15,7 @@
       "maxValue": 30
     },
     "yeast": {
-      "maxLength": 15
+      "maxLength": 10
     },
     "totboiltime": {
       "minValue": 0,
@@ -33,7 +33,7 @@
 
   "restdata": {
     "name": {
-      "maxLength": 50
+      "maxLength": 10
     },
     "temperature": {
       "minValue": 0,
@@ -47,7 +47,7 @@
 
   "boildata": {
     "name": {
-      "maxLength": 50
+      "maxLength": 10
     },
     "alphaacid": {
       "minValue": 0,
@@ -65,7 +65,7 @@
 
   "gristdata": {
     "name": {
-      "maxLength": 50
+      "maxLength": 10
     },
     "ebc": {
       "minValue": 0,

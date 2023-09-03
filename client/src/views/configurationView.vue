@@ -1,6 +1,6 @@
 <template>
   <v-card>
-    <div class="home">
+    <div class="ConfigurationView">
       <h1>Configpanel</h1>
       <p>set limits</p>
       <p>gradient faktor</p>
@@ -15,7 +15,7 @@
 // import HelloWorld from '@/components/HelloWorld.vue'
 
 export default {
-  name: "homeView",
+  name: "ConfigurationView",
   components: {
     // HelloWorld
   },

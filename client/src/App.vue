@@ -6,7 +6,7 @@
       <v-btn text link to="/">Home</v-btn>
       <v-btn text link to="/recipePanel">Recipe Panel</v-btn>
       <v-btn text link to="/controlPanel">Control Panel</v-btn>
-      <v-btn text link to="/configuration">Configuration</v-btn>
+      <v-btn text link to="/configurationView">Configuration</v-btn>
     </v-toolbar>
     <v-main>
       <router-view />
