@@ -1,14 +1,13 @@
 <template>
   <v-card>
     <v-toolbar color="primary">
-      <v-toolbar-title>Recipe Panel</v-toolbar-title>
 
       <v-spacer></v-spacer>
 
       <!-- dropdown -->
       <v-combobox
         clearable
-        label="select Master"
+        label="select Recipe"
         :items="dropdownItems"
         v-model="selectedRecipeName"
       ></v-combobox>
@@ -23,7 +22,7 @@
             `new Recipe created!`
           )
         "
-        >create Master</v-btn
+        >create</v-btn
       >
 
       <!-- button update master -->
@@ -41,7 +40,7 @@
             `Recipe id ${this.selectedRecipeId} got updated!`
           )
         "
-        >update Master</v-btn
+        >update</v-btn
       >
       <!-- button delete master  -->
       <v-btn
@@ -53,7 +52,7 @@
             `Recipe id ${this.selectedRecipeId} got deleted!`
           )
         "
-        >delete Master</v-btn
+        >delete</v-btn
       >
     </v-toolbar>
     <v-row>
