@@ -59,7 +59,7 @@
     },
     "weight": {
       "minValue": 0,
-      "maxValue": 100
+      "maxValue": 10000
     }
   },
 

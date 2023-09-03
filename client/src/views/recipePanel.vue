@@ -1,7 +1,6 @@
 <template>
   <v-card>
     <v-toolbar color="primary">
-
       <v-spacer></v-spacer>
 
       <!-- dropdown -->
@@ -22,6 +21,7 @@
             `new Recipe created!`
           )
         "
+        :disabled="createButtonDisabled"
         >create</v-btn
       >
 
@@ -40,6 +40,7 @@
             `Recipe id ${this.selectedRecipeId} got updated!`
           )
         "
+        :disabled="updateButtonDisabled"
         >update</v-btn
       >
       <!-- button delete master  -->
@@ -80,6 +81,7 @@
                 { name: 'spargevol', label: 'Sparge Water [ltr]' },
               ]"
               v-model="master"
+              @validation="handleValidation"
             />
           </v-window-item>
 
@@ -92,8 +94,9 @@
                 { name: 'duration', label: 'Rest for... [min]' },
               ]"
               title="Rests"
-              dataName = "restdata"
+              dataName="restdata"
               v-model="rests"
+              @validation="handleValidation"
             />
           </v-window-item>
 
@@ -107,8 +110,9 @@
                 { name: 'weight', label: 'Weight [g]' },
               ]"
               title="Hops"
-              dataName = "boildata"
+              dataName="boildata"
               v-model="hops"
+              @validation="handleValidation"
             />
           </v-window-item>
 
@@ -120,9 +124,10 @@
                 { name: 'ebc', label: 'EBC' },
                 { name: 'weight', label: 'Weight [g]' },
               ]"
-              dataName = "gristdata"
+              dataName="gristdata"
               title="Grist"
               v-model="malts"
+              @validation="handleValidation"
             />
           </v-window-item>
         </v-window>
@@ -172,8 +177,19 @@ export default {
       malts: [{}],
 
       // _________________________________________________________________________________________ Layout binding Variables
+
       SnackbarMessage: "",
       SnackbarColor: "",
+      ValidationStatus: false,
+      ValidationErrorCount: [],
+
+      createButtonDisabled: true,
+      updateButtonDisabled: true,
+
+      createButtonDisabledstate: true,
+      updateButtonDisabledstate: true,
+
+      ButtonDisableValidation: false,
     };
   },
 
@@ -188,6 +204,17 @@ export default {
       } else {
         this.showSnackbar(OKmessage, "success");
       }
+    },
+
+    //when Validation is false -> safe status and disable buttons. For that count nuber of Validation errors
+    handleValidation(ValidationValue) {
+      console.log(ValidationValue)
+      if (ValidationValue) {
+        this.ButtonDisableValidation = true;
+      } else {
+        this.ButtonDisableValidation = false;
+      }
+      console.log(this.ButtonDisableValidation)
     },
 
     //handle toolbar buttons such as create, update and delete
@@ -269,6 +296,7 @@ export default {
       this.$refs.snackbarComponent.snackbar = true;
       this.SnackbarColor = color;
     },
+
   },
 
   // _________________________________________________________________________________________ watch
@@ -287,6 +315,49 @@ export default {
         this.emptyForms();
       }
     },
+
+    master: {
+      deep: true,
+
+      handler(newMaster) {
+
+        //disable buttons, when nothing is selected
+        if(this.selectedRecipeName === null || this.selectedRecipeId === null){
+          this.createButtonDisabled = true;
+          this.updateButtonDisabled = true;
+
+          this.createButtonDisabledstate = true,
+          this.updateButtonDisabledstate = true
+          return;
+        }
+        // Überprüfe, ob der Name im ersten Objekt des Arrays geändert wurde
+        if (newMaster[0].name === this.selectedRecipeName) {
+          this.createButtonDisabled = true;
+          this.updateButtonDisabled = false;
+
+          this.createButtonDisabledstate = true,
+          this.updateButtonDisabledstate = false
+        } else {
+          this.createButtonDisabled = false;
+          this.updateButtonDisabled = true;
+
+          this.createButtonDisabledstate = false,
+          this.updateButtonDisabledstate = true
+        }
+      },
+    },
+    ButtonDisableValidation: {
+      handler (newVal) {
+        if(newVal){
+          this.createButtonDisabled = true;
+          this.updateButtonDisabled = true;
+        } else {
+          this.createButtonDisabled = this.createButtonDisabledstate;
+          this.updateButtonDisabled = this.updateButtonDisabledstate;
+        }
+      }
+    }
+
   },
 
   // _________________________________________________________________________________________ mounted

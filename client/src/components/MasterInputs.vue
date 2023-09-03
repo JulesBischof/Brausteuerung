@@ -29,42 +29,60 @@
 </template>
 
 <script>
-import { FieldValidation as FieldValidation } from '../Validation/FieldValidation.js';
+import { FieldValidation as FieldValidation } from "../Validation/FieldValidation.js";
 
 export default {
   props: {
     fields: Array,
-    modelValue: Array
+    modelValue: Array,
   },
-  data () {
+  data() {
     return {
-      errorMessage: {}
-    }
+      errorMessage: {},
+      errorCountArray: [],
+    };
   },
   methods: {
-  validateField(item, field) {
-    const fieldValue = item[field.name];
-    const validator = new FieldValidation(field.name, 'masterdata', field.inputType);
-    const validationError = validator.validate(fieldValue);
+    validateField(item, field) {
+      this.$emit("validation", this.getSumOfValidationErrors());
 
-    // Verwenden Sie ein assoziatives Array, um Fehlermeldungen für jedes Feld zu speichern
-    if (validationError) {
-      this.errorMessage[field.name] = validationError.message;
-    } else {
-      delete this.errorMessage[field.name];
-    }
-  }
-},
+      const fieldValue = item[field.name];
+      const validator = new FieldValidation(
+        field.name,
+        "masterdata",
+        field.inputType
+      );
+      const validationError = validator.validate(fieldValue);
+
+      // Verwenden Sie ein assoziatives Array, um Fehlermeldungen für jedes Feld zu speichern
+      if (validationError) {
+        this.errorMessage[field.name] = validationError.message;
+        this.errorCountArray[field.name] = 1;
+      } else {
+        delete this.errorMessage[field.name];
+        this.errorCountArray[field.name] = 0;
+      }
+    },
+
+    getSumOfValidationErrors() {
+      let sum = 0;
+      for (let i = 0; i < this.fields.length; i++) {
+        const fieldName = this.fields[i].name;
+        sum += this.errorCountArray[fieldName] || 0;
+      }
+      return sum;
+    },
+  },
 
   computed: {
     inputItems: {
-      get () {
+      get() {
         return this.modelValue;
       },
-      set (value) {
-        this.$emit('update:modelvalue', value)
-      }
-    }
+      set(value) {
+        this.$emit("update:modelvalue", value);
+      },
+    },
   },
-}
+};
 </script>
