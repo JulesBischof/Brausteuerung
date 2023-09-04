@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-toolbar color="primary">
+    <v-toolbar theme="dark">
       <v-toolbar-title>Brausteuerung 2.0</v-toolbar-title>
       <v-spacer></v-spacer>
       <v-btn text link to="/">Home</v-btn>

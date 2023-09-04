@@ -1,6 +1,7 @@
 <template>
   <v-card>
-    <v-toolbar color="primary">
+
+    <v-toolbar theme="dark">
       <v-spacer></v-spacer>
 
       <!-- dropdown -->
@@ -55,17 +56,21 @@
         "
         >delete</v-btn
       >
+      
+      <v-spacer></v-spacer>
+
     </v-toolbar>
-    <v-row>
-      <v-col cols="12" sm="2">
-        <v-tabs v-model="tab" direction="vertical" color="primary">
+
+        <v-tabs v-model="tab" align-tabs="center" color="primary">
           <v-tab Value="Master">Master</v-tab>
           <v-tab value="Rests"> Rests </v-tab>
           <v-tab value="Hops"> Hops </v-tab>
           <v-tab value="Grist"> Grist </v-tab>
         </v-tabs>
-      </v-col>
-      <v-col cols="12" sm="10">
+
+      <v-row>
+      <v-container>
+        <v-spacer>
         <v-window v-model="tab">
           <!-- MASTER PANEL -->
           <v-window-item value="Master">
@@ -131,7 +136,8 @@
             />
           </v-window-item>
         </v-window>
-      </v-col>
+      </v-spacer>
+    </v-container>
     </v-row>
     <Snackbar
       ref="snackbarComponent"
@@ -148,6 +154,7 @@ import InputTable from "@/components/InputTable.vue";
 import MasterInputs from "@/components/MasterInputs.vue";
 import Snackbar from "@/components/ShowSnackbar.vue";
 import axios from "axios";
+
 
 const serverUrl = "http://localhost:5000";
 
