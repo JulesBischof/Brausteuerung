@@ -1,8 +1,5 @@
 <template>
   <v-card>
-    <v-container>
-      <h1 class="Title">{{ title }}</h1>
-    </v-container>
     <v-card-actions>
       <v-btn @click="addItem"> <v-icon>mdi-plus</v-icon> Add </v-btn>
     </v-card-actions>
@@ -35,7 +32,6 @@ import { FieldValidation } from "../Validation/FieldValidation.js";
 export default {
   props: {
     fields: Array,
-    title: String,
     modelValue: Array,
     dataName: String,
   },

@@ -1,76 +1,91 @@
 <template>
   <v-card>
-
-    <v-toolbar theme="dark">
-      <v-spacer></v-spacer>
-
-      <!-- dropdown -->
-      <v-combobox
-        clearable
-        label="select Recipe"
-        :items="dropdownItems"
-        v-model="selectedRecipeName"
-      ></v-combobox>
-
-      <!-- button create master  -->
-      <v-btn
-        @click="
-          handleButton(
-            'recipepanelAPI/',
-            { master, rests, hops, malts },
-            'post',
-            `new Recipe created!`
-          )
-        "
-        :disabled="createButtonDisabled"
-        >create</v-btn
-      >
-
-      <!-- button update master -->
-      <v-btn
-        @click="
-          handleButton(
-            `recipepanelAPI/${selectedRecipeId}`,
-            {
-              master,
-              rests,
-              hops,
-              malts,
-            },
-            'put',
-            `Recipe id ${this.selectedRecipeId} got updated!`
-          )
-        "
-        :disabled="updateButtonDisabled"
-        >update</v-btn
-      >
-      <!-- button delete master  -->
-      <v-btn
-        @click="
-          handleButton(
-            `recipepanelAPI/${selectedRecipeId}`,
-            {},
-            'delete',
-            `Recipe id ${this.selectedRecipeId} got deleted!`
-          )
-        "
-        >delete</v-btn
-      >
-      
-      <v-spacer></v-spacer>
-
-    </v-toolbar>
-
-        <v-tabs v-model="tab" align-tabs="center" color="primary">
-          <v-tab Value="Master">Master</v-tab>
-          <v-tab value="Rests"> Rests </v-tab>
-          <v-tab value="Hops"> Hops </v-tab>
-          <v-tab value="Grist"> Grist </v-tab>
-        </v-tabs>
-
+    <v-container>
       <v-row>
+        <v-spacer></v-spacer>
+        <v-col sm="6">
+          <!-- dropdown -->
+          <v-combobox
+            clearable
+            label="select Recipe"
+            :items="dropdownItems"
+            v-model="selectedRecipeName"
+          ></v-combobox>
+        </v-col>
+        <v-spacer></v-spacer>
+      </v-row>
+
       <v-container>
-        <v-spacer>
+        <v-row>
+          <v-spacer></v-spacer>
+          <!-- button create master  -->
+          <v-col cols="auto">
+            <v-btn
+            prepend-icon="mdi-folder-plus-outline" stacked
+              @click="
+                handleButton(
+                  'recipepanelAPI/',
+                  { master, rests, hops, malts },
+                  'post',
+                  `new Recipe created!`
+                )
+              "
+              :disabled="createButtonDisabled"
+              >create</v-btn
+            >
+            </v-col>
+
+          <!-- button update master -->
+          <v-col cols="auto">
+            <v-btn
+            prepend-icon="mdi-update" stacked
+              @click="
+                handleButton(
+                  `recipepanelAPI/${selectedRecipeId}`,
+                  {
+                    master,
+                    rests,
+                    hops,
+                    malts,
+                  },
+                  'put',
+                  `Recipe id ${this.selectedRecipeId} got updated!`
+                )
+              "
+              :disabled="updateButtonDisabled"
+              >update</v-btn
+            >
+            </v-col>
+
+          <!-- button delete master  -->
+          <v-col cols="auto">
+            <v-btn
+            prepend-icon="mdi-delete-outline" stacked
+              @click="
+                handleButton(
+                  `recipepanelAPI/${selectedRecipeId}`,
+                  {},
+                  'delete',
+                  `Recipe id ${this.selectedRecipeId} got deleted!`
+                )
+              "
+              >delete</v-btn>
+          </v-col>
+          <v-spacer></v-spacer>
+        </v-row>
+      </v-container>
+    </v-container>
+    <v-divider :thickness="5"></v-divider>
+    <v-tabs v-model="tab" align-tabs="center" color="primary">
+      <v-tab Value="Master">Master</v-tab>
+      <v-tab value="Rests"> Rests </v-tab>
+      <v-tab value="Hops"> Hops </v-tab>
+      <v-tab value="Grist"> Grist </v-tab>
+    </v-tabs>
+
+    <v-row>
+      <v-container>
+        <v-spacer></v-spacer>
         <v-window v-model="tab">
           <!-- MASTER PANEL -->
           <v-window-item value="Master">
@@ -98,7 +113,6 @@
                 { name: 'temperature', label: 'Temperature [°C]' },
                 { name: 'duration', label: 'Rest for... [min]' },
               ]"
-              title="Rests"
               dataName="restdata"
               v-model="rests"
               @validation="handleValidation"
@@ -114,7 +128,6 @@
                 { name: 'droptime', label: 'Drop after... [min]' },
                 { name: 'weight', label: 'Weight [g]' },
               ]"
-              title="Hops"
               dataName="boildata"
               v-model="hops"
               @validation="handleValidation"
@@ -130,14 +143,13 @@
                 { name: 'weight', label: 'Weight [g]' },
               ]"
               dataName="gristdata"
-              title="Grist"
               v-model="malts"
               @validation="handleValidation"
             />
           </v-window-item>
         </v-window>
-      </v-spacer>
-    </v-container>
+        <v-spacer></v-spacer>
+      </v-container>
     </v-row>
     <Snackbar
       ref="snackbarComponent"
@@ -154,7 +166,6 @@ import InputTable from "@/components/InputTable.vue";
 import MasterInputs from "@/components/MasterInputs.vue";
 import Snackbar from "@/components/ShowSnackbar.vue";
 import axios from "axios";
-
 
 const serverUrl = "http://localhost:5000";
 
@@ -215,13 +226,13 @@ export default {
 
     //when Validation is false -> safe status and disable buttons. For that count nuber of Validation errors
     handleValidation(ValidationValue) {
-      console.log(ValidationValue)
+      console.log(ValidationValue);
       if (ValidationValue) {
         this.ButtonDisableValidation = true;
       } else {
         this.ButtonDisableValidation = false;
       }
-      console.log(this.ButtonDisableValidation)
+      console.log(this.ButtonDisableValidation);
     },
 
     //handle toolbar buttons such as create, update and delete
@@ -303,7 +314,6 @@ export default {
       this.$refs.snackbarComponent.snackbar = true;
       this.SnackbarColor = color;
     },
-
   },
 
   // _________________________________________________________________________________________ watch
@@ -327,14 +337,16 @@ export default {
       deep: true,
 
       handler(newMaster) {
-
         //disable buttons, when nothing is selected
-        if(this.selectedRecipeName === null || this.selectedRecipeId === null){
+        if (
+          this.selectedRecipeName === null ||
+          this.selectedRecipeId === null
+        ) {
           this.createButtonDisabled = true;
           this.updateButtonDisabled = true;
 
-          this.createButtonDisabledstate = true,
-          this.updateButtonDisabledstate = true
+          (this.createButtonDisabledstate = true),
+            (this.updateButtonDisabledstate = true);
           return;
         }
         // Überprüfe, ob der Name im ersten Objekt des Arrays geändert wurde
@@ -342,29 +354,28 @@ export default {
           this.createButtonDisabled = true;
           this.updateButtonDisabled = false;
 
-          this.createButtonDisabledstate = true,
-          this.updateButtonDisabledstate = false
+          (this.createButtonDisabledstate = true),
+            (this.updateButtonDisabledstate = false);
         } else {
           this.createButtonDisabled = false;
           this.updateButtonDisabled = true;
 
-          this.createButtonDisabledstate = false,
-          this.updateButtonDisabledstate = true
+          (this.createButtonDisabledstate = false),
+            (this.updateButtonDisabledstate = true);
         }
       },
     },
     ButtonDisableValidation: {
-      handler (newVal) {
-        if(newVal){
+      handler(newVal) {
+        if (newVal) {
           this.createButtonDisabled = true;
           this.updateButtonDisabled = true;
         } else {
           this.createButtonDisabled = this.createButtonDisabledstate;
           this.updateButtonDisabled = this.updateButtonDisabledstate;
         }
-      }
-    }
-
+      },
+    },
   },
 
   // _________________________________________________________________________________________ mounted

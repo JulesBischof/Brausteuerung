@@ -1,15 +1,12 @@
 <template>
   <div>
     <v-card>
-      <v-container>
-        <h1>Masterdata</h1>
-      </v-container>
       <v-card-text>
         <div v-for="(item, index) in inputItems" :key="index">
           <v-row>
             <v-col
               cols="12"
-              sm="5"
+              sm="6"
               v-for="(field, fieldIndex) in fields"
               :key="fieldIndex"
             >
