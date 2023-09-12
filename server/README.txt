@@ -23,3 +23,22 @@ Serverseitige API:
                 malts                   <- array
             ]
     .get                                <-get masternames für das Dropdown Menü
+
+/controlAPI/auto
+    .post
+        body:
+            {
+                selectedID,             <- int
+                brewmode,               <- string (boil/brew)
+                autoMode,               <- bool
+            }
+
+/controlAPI/manual
+    .post
+        body:
+            {
+                stirrspeed,             <- int (0/1/2)
+                boiler                  <- bool
+            }
+
+/pollAPI/

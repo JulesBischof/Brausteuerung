@@ -1,13 +1,11 @@
 <template>
-  <div>
-    <!-- Hier kommt dein Template-Code -->
-  </div>
+  <div></div>
 </template>
 
 <script>
 export default {
   props: {
-    // Hier kommen deine props (falls benötigt)
+    modelValue: Object,
   },
   data () {
     return {
@@ -15,7 +13,11 @@ export default {
     }
   },
   computed: {
-    // Hier kommen deine computed properties (falls benötigt)
+    InputValue: {
+      get(){
+        return this.modelValue;
+      }
+    }
   },
   methods: {
     // Hier kommen deine Methoden/Funktionen
